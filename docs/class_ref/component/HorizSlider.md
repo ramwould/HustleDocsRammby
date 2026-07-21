@@ -1,63 +1,127 @@
-[](../../wip.md ':include')
-
-<div id="page_main"></div>
-
-
-<script>
-
-let data = {
-    version: "1.8.23",
-    name: "UI Component: HorizSlider",
-    inherits: "VBoxContainer",
-    script_path: "",
-    scene_path: "res://ui/HorizSlider/HorizSlider.tscn",
-    desc: "",
-    signals: [
-        { name:'data_changed',
-          params:[],
-                desc:"" },
-    ],
-    constants: [
-    ],
-    properties: [
-        { onready:true, name:'default',
-          type:'Node', value:'$Direction.value',
-                desc:"" },
-        { export:true, name:'centered',
-          type:'bool', value:'true',
-                desc:"" },
-        { export:true, name:'min_value',
-          type:'int', value:'0',
-                desc:"" },
-        { export:true, name:'max_value',
-          type:'int', value:'100',
-                desc:"" },
-        { name:'buffer_value_changed',
-          type:'bool', value:'false',
-                desc:"" },
-    ],
-    methods: [
-        { name:'_input',
-          params:['event:InputEvent'],
-                desc:"" },
-        { name:'_ready',
-          params:[],
-                desc:"" },
-        { name:'on_value_changed',
-          params:['value'],
-                desc:"" },
-        { name:'_process',
-          params:['_delta'],
-                desc:"" },
-        { name:'get_value',
-          params:[], type:'int',
-                desc:"" },
-        { name:'get_data',
-          params:[], type:'Dictionary',
-                desc:"" },
-    ],
-};
+# HorizSlider
+- extends VBoxContainer
+- script "res://ui/8Way/HorizSlider.gd"
+- scene "res://ui/8Way/HorizSlider.tscn"
+- version 1.10.0
 
 
-    Vue.createApp(ClassDocsComponent, data).mount("#page_main");
-</script>
+
+
+
+---
+## Property Descriptions
+
+### var default
+- var default : Node = $Direction.value
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var centered
+- var centered : bool = true
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var _c_EnableThisToUseMinAndMaxValue
+- var _c_EnableThisToUseMinAndMaxValue : int = 0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var apply_top_node_range
+- var apply_top_node_range : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var _c_DisabledByDefaultForBackwardCompatibility
+- var _c_DisabledByDefaultForBackwardCompatibility : int = 0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var min_value
+- var min_value : int = 0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var max_value
+- var max_value : int = 100
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var buffer_value_changed
+- var buffer_value_changed : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
+---
+## Method Descriptions
+
+### func _input
+- func _input(event:InputEvent)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _ready
+- func _ready()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func on_value_changed
+- func on_value_changed(value)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _process
+- func _process(_delta)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_value
+- func get_value() -> int
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_data
+- func get_data() -> Dictionary
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
+---
+## Signal Descriptions
+
+### signal data_changed
+- signal data_changed()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+

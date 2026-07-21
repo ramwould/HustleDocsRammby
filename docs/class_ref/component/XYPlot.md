@@ -1,285 +1,664 @@
-[](../../wip.md ':include')
-
-<div id="page_main"></div>
-
-
-<script>
-
-let data = {
-    version: "1.8.23",
-    name: "UI Component: XYPlot",
-    inherits: "Container",
-    script_path: "",
-    scene_path: "res://ui/XYPlot/XYPlot.tscn",
-    desc: "",
-    signals: [
-        { name:'data_changed',
-          params:[],
-                desc:"" },
-        { name:'pos_data_changed',
-          params:['pos', 'change'],
-                desc:"" },
-    ],
-    constants: [
-        { name:'PROPERTY_DEFAULTS',
-          type:'Dictionary', value:'{',
-                desc:"" },
-        { name:'TOP_LABEL_SIZE',
-          type:'int', value:'11',
-                desc:"" },
-        { name:'BOTTOM_LABEL_SIZE',
-          type:'int', value:'11',
-                desc:"" },
-        { name:'LABEL_NEGATIVE_PADDING',
-          type:'int', value:'3',
-                desc:"" },
-        { name:'PLOT_PANEL_BASE_PADDING',
-          type:'Vector2', value:'Vector2(10, TOP_LABEL_SIZE + BOTTOM_LABEL_SIZE - (LABEL_NEGATIVE_PADDING * 2))',
-                desc:"" },
-        { name:'FULL_CIRCLE_SIZE',
-          type:'Vector2', value:'Vector2(50, 50)',
-                desc:"" },
-        { name:'HALF_CIRCLE_SIZE',
-          type:'Vector2', value:'Vector2(80, 40)',
-                desc:"" },
-        { name:'QUARTER_CIRCLE_SIZE',
-          type:'Vector2', value:'Vector2(45, 45)',
-                desc:"" },
-        { name:'FULL_CIRCLE_PADDING',
-          type:'Vector2', value:'Vector2(0, 0)',
-                desc:"" },
-        { name:'HALF_CIRCLE_PADDING',
-          type:'Vector2', value:'Vector2(0, 5)',
-                desc:"" },
-        { name:'QUARTER_CIRCLE_PADDING',
-          type:'Vector2', value:'Vector2(2.5, 2.5)',
-                desc:"" },
-        { name:'PERCENT_MAX',
-          type:'int', value:'100',
-                desc:"" },
-        { name:'SNAP_AMOUNT',
-          type:'float', value:'0.1',
-                desc:"" },
-    ],
-    properties: [
-        { onready:true, name:'panel',
-          type:'Node', value:'$PlotPanel',
-                desc:"" },
-        { onready:true, name:'nub',
-          type:'Node', value:'$PlotPanelNub',
-                desc:"" },
-        { onready:true, name:'x_label',
-          type:'Node', value:'$XLabel',
-                desc:"" },
-        { onready:true, name:'y_label',
-          type:'Node', value:'$YLabel',
-                desc:"" },
-        { name:'panel_type',
-          type:'UNKNOWN_TYPE', value:'PanelType.Full',
-                desc:"" },
-        { name:'always_max',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'snap',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'limit_angle',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'normalize_display',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'left_quarter',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'bottom_half',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'min_length',
-          type:'float', value:'0.0',
-                desc:"" },
-        { name:'limit_range_degrees',
-          type:'float', value:'90.0',
-                desc:"" },
-        { name:'limit_center_degrees',
-          type:'float', value:'0.0',
-                desc:"" },
-        { name:'limit_symmetrical',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'snap_angles',
-          type:'int', value:'8',
-                desc:"" },
-        { name:'snap_align_to_limit_center',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'snap_radius',
-          type:'float', value:'0.0',
-                desc:"" },
-        { name:'default_value',
-          type:'Vector2', value:'Vector2(0, 0)',
-                desc:"" },
-        { name:'plot_panel_size',
-          type:'Vector2', value:'Vector2(50, 50)',
-                desc:"" },
-        { name:'plot_panel_padding',
-          type:'Vector2', value:'Vector2(0, 0)',
-                desc:"" },
-        { name:'mouse_over',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'mouse_clicked',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'buffer_changed',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'buffer_update',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'value_float',
-          type:'Vector2', value:'Vector2()',
-                desc:"" },
-        { name:'panel_radius',
-          type:'UNKNOWN_TYPE', value:'plot_panel_size.x',
-                desc:"" },
-        { name:'facing',
-          type:'int', value:'1',
-                desc:"" },
-    ],
-    methods: [
-        { name:'_get_property_list',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'property_can_revert',
-          params:['property:String'], type:'bool',
-                desc:"" },
-        { name:'property_get_revert',
-          params:['property:String'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'set_panel_type',
-          params:['val'],
-                desc:"" },
-        { name:'set_always_max',
-          params:['val'],
-                desc:"" },
-        { name:'set_snap',
-          params:['val'],
-                desc:"" },
-        { name:'set_limit_angle',
-          params:['val'],
-                desc:"" },
-        { name:'set_normalize_display',
-          params:['val'],
-                desc:"" },
-        { name:'set_left_quarter',
-          params:['val'],
-                desc:"" },
-        { name:'set_bottom_half',
-          params:['val'],
-                desc:"" },
-        { name:'set_min_length',
-          params:['val'],
-                desc:"" },
-        { name:'set_limit_range_degrees',
-          params:['val'],
-                desc:"" },
-        { name:'set_limit_center_degrees',
-          params:['val'],
-                desc:"" },
-        { name:'set_limit_symmetrical',
-          params:['val'],
-                desc:"" },
-        { name:'set_snap_angles',
-          params:['val'],
-                desc:"" },
-        { name:'set_snap_align_to_limit_center',
-          params:['val'],
-                desc:"" },
-        { name:'set_snap_radius',
-          params:['val'],
-                desc:"" },
-        { name:'set_default_value',
-          params:['val'],
-                desc:"" },
-        { name:'_ready',
-          params:[],
-                desc:"" },
-        { name:'_process',
-          params:['_delta'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'update',
-          params:[],
-                desc:"" },
-        { name:'_rect_for',
-          params:['child'], type:'Rect2',
-                desc:"" },
-        { name:'_notification',
-          params:['what'],
-                desc:"" },
-        { name:'_on_update_timer_timeout',
-          params:[],
-                desc:"" },
-        { name:'_on_plot_mouse_entered',
-          params:[],
-                desc:"" },
-        { name:'_on_plot_mouse_exited',
-          params:[],
-                desc:"" },
-        { name:'_on_plot_mouse_input_event',
-          params:['event:InputEventMouseButton'],
-                desc:"" },
-        { name:'midpoint',
-          params:[], type:'Vector2',
-                desc:"" },
-        { name:'update_value',
-          params:['p=null', 'set_buffer_update:bool=true'],
-                desc:"" },
-        { name:'get_panel_size',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_panel_padding',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'set_flash',
-          params:['on'],
-                desc:"" },
-        { name:'reset',
-          params:[],
-                desc:"" },
-        { name:'set_facing',
-          params:['val'],
-                desc:"" },
-        { name:'set_label',
-          params:['text'],
-                desc:"" },
-        { name:'get_limit_vec',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_limit_center',
-          params:[], type:'get_limit_vec',
-                desc:"" },
-        { name:'get_limit_range',
-          params:[], type:'deg2rad',
-                desc:"" },
-        { name:'get_default_value',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_data',
-          params:[], type:'as_percentage_int_vec',
-                desc:"" },
-        { name:'set_value_float',
-          params:['value'],
-                desc:"" },
-        { name:'as_percentage_int_vec',
-          params:['vec2:Vector2'], type:'Dictionary',
-                desc:"" },
-        { name:'get_value_float',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-    ],
-};
+# XYPlot
+- class_name XYPlot
+- extends Container
+- script "res://ui/8Way/XYPlot.gd"
+- scene "res://ui/8Way/XYPlot.tscn"
+- version 1.10.0
 
 
-    Vue.createApp(ClassDocsComponent, data).mount("#page_main");
-</script>
+
+
+
+---
+## Property Descriptions
+
+### var panel
+- var panel : Node = $PlotPanel
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var nub
+- var nub : Node = $PlotPanelNub
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var x_label
+- var x_label : Node = $XLabel
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var y_label
+- var y_label : Node = $YLabel
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var update_timer
+- var update_timer : Node = $"%UpdateTimer"
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var panel_type
+- var panel_type : UNKNOWN_TYPE = PanelType.Full
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var always_max
+- var always_max : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var snap
+- var snap : bool = true
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var limit_angle
+- var limit_angle : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var normalize_display
+- var normalize_display : bool = true
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var left_quarter
+- var left_quarter : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var bottom_half
+- var bottom_half : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var min_length
+- var min_length : float = 0.0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var limit_range_degrees
+- var limit_range_degrees : float = 90.0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var limit_center_degrees
+- var limit_center_degrees : float = 0.0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var limit_symmetrical
+- var limit_symmetrical : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var snap_angles
+- var snap_angles : int = 8
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var snap_align_to_limit_center
+- var snap_align_to_limit_center : bool = true
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var snap_radius
+- var snap_radius : float = 0.0
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var default_value
+- var default_value : Vector2 = Vector2(0, 0)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var plot_panel_size
+- var plot_panel_size : Vector2 = Vector2(50, 50)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var plot_panel_padding
+- var plot_panel_padding : Vector2 = Vector2(0, 0)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var mouse_over
+- var mouse_over : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var mouse_clicked
+- var mouse_clicked : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var buffer_changed
+- var buffer_changed : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var buffer_update
+- var buffer_update : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var was_game_paused
+- var was_game_paused : bool = false
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var value_float
+- var value_float : Vector2 = Vector2()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var last_di_pos
+- var last_di_pos : UNKNOWN_TYPE = null
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var panel_radius
+- var panel_radius : UNKNOWN_TYPE = plot_panel_size.x
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### var facing
+- var facing : int = 1
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
+---
+## Method Descriptions
+
+### func _get_property_list
+- func _get_property_list() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func property_can_revert
+- func property_can_revert(property:String) -> bool
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func property_get_revert
+- func property_get_revert(property:String) -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_panel_type
+- func set_panel_type(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_always_max
+- func set_always_max(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_snap
+- func set_snap(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_limit_angle
+- func set_limit_angle(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_normalize_display
+- func set_normalize_display(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_left_quarter
+- func set_left_quarter(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_bottom_half
+- func set_bottom_half(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_min_length
+- func set_min_length(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_limit_range_degrees
+- func set_limit_range_degrees(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_limit_center_degrees
+- func set_limit_center_degrees(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_limit_symmetrical
+- func set_limit_symmetrical(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_snap_angles
+- func set_snap_angles(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_snap_align_to_limit_center
+- func set_snap_align_to_limit_center(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_snap_radius
+- func set_snap_radius(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_default_value
+- func set_default_value(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _ready
+- func _ready()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _process
+- func _process(_delta)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func update
+- func update()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _rect_for
+- func _rect_for(child) -> Rect2
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _notification
+- func _notification(what)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _on_update_timer_timeout
+- func _on_update_timer_timeout()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _on_plot_mouse_entered
+- func _on_plot_mouse_entered()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _on_plot_mouse_exited
+- func _on_plot_mouse_exited()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_update_speed
+- func get_update_speed() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func _on_plot_mouse_input_event
+- func _on_plot_mouse_input_event(event:InputEventMouseButton)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func midpoint
+- func midpoint() -> Vector2
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func update_value
+- func update_value(p=null, set_buffer_update:bool=true, ignore_snap:bool=false)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_panel_size
+- func get_panel_size() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_panel_padding
+- func get_panel_padding() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_flash
+- func set_flash(on)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func reset
+- func reset()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_facing
+- func set_facing(val)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_label
+- func set_label(text)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_limit_vec
+- func get_limit_vec() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_limit_center
+- func get_limit_center() -> get_limit_vec
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_limit_range
+- func get_limit_range() -> deg2rad
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_default_value
+- func get_default_value() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_data
+- func get_data() -> as_percentage_int_vec
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_value_float
+- func set_value_float(value)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func as_percentage_int_vec
+- func as_percentage_int_vec(vec2:Vector2) -> Dictionary
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func get_value_float
+- func get_value_float() -> UNKNOWN_TYPE
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### func set_last_di
+- func set_last_di(di)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
+---
+## Constant Descriptions
+
+### const PROPERTY_DEFAULTS
+- const PROPERTY_DEFAULTS : Dictionary = {
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const TOP_LABEL_SIZE
+- const TOP_LABEL_SIZE : int = 11
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const BOTTOM_LABEL_SIZE
+- const BOTTOM_LABEL_SIZE : int = 11
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const LABEL_NEGATIVE_PADDING
+- const LABEL_NEGATIVE_PADDING : int = 3
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const PLOT_PANEL_BASE_PADDING
+- const PLOT_PANEL_BASE_PADDING : Vector2 = Vector2(10, TOP_LABEL_SIZE+BOTTOM_LABEL_SIZE-(LABEL_NEGATIVE_PADDING*2))
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const FULL_CIRCLE_SIZE
+- const FULL_CIRCLE_SIZE : Vector2 = Vector2(50, 50)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const HALF_CIRCLE_SIZE
+- const HALF_CIRCLE_SIZE : Vector2 = Vector2(80, 40)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const QUARTER_CIRCLE_SIZE
+- const QUARTER_CIRCLE_SIZE : Vector2 = Vector2(45, 45)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const FULL_CIRCLE_PADDING
+- const FULL_CIRCLE_PADDING : Vector2 = Vector2(0, 0)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const HALF_CIRCLE_PADDING
+- const HALF_CIRCLE_PADDING : Vector2 = Vector2(0, 5)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const QUARTER_CIRCLE_PADDING
+- const QUARTER_CIRCLE_PADDING : Vector2 = Vector2(2.5, 2.5)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const PERCENT_MAX
+- const PERCENT_MAX : int = 100
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### const SNAP_AMOUNT
+- const SNAP_AMOUNT : float = 0.1
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
+---
+## Signal Descriptions
+
+### signal data_changed
+- signal data_changed()
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+### signal pos_data_changed
+- signal pos_data_changed(pos, change)
+
+[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
+
+
+
+
