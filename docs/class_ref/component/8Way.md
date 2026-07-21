@@ -1,4 +1,5 @@
 # 8Way
+- class_name 8Way
 - extends Control
 - script "res://ui/8Way/8Way.gd"
 - scene "res://ui/8Way/8Way.tscn"

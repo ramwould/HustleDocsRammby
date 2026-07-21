@@ -1,4 +1,5 @@
 # HorizSlider
+- class_name HorizSlider
 - extends VBoxContainer
 - script "res://ui/8Way/HorizSlider.gd"
 - scene "res://ui/8Way/HorizSlider.tscn"
