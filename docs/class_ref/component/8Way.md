@@ -34,7 +34,7 @@
 
 
 ### var pressed_button
-- var pressed_button : UNKNOWN_TYPE = null
+- var pressed_button : Node = null
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -178,7 +178,7 @@
 
 
 ### func set_dir
-- func set_dir(dir, force_absolute:bool=false) -> UNKNOWN_TYPE
+- func set_dir(dir, force_absolute:bool=false)
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -199,28 +199,28 @@
 
 
 ### func get_dir
-- func get_dir() -> UNKNOWN_TYPE
+- func get_dir() -> String
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_dir_name
-- func get_dir_name() -> UNKNOWN_TYPE
+- func get_dir_name() -> String
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_button
-- func get_button(button_name) -> UNKNOWN_TYPE
+- func get_button(button_name) -> Node
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_buttons
-- func get_buttons() -> UNKNOWN_TYPE
+- func get_buttons() -> Array
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 

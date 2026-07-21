@@ -48,7 +48,7 @@
 
 
 ### var panel_type
-- var panel_type : UNKNOWN_TYPE = PanelType.Full
+- var panel_type : PanelType = PanelType.Full
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -209,14 +209,14 @@
 
 
 ### var last_di_pos
-- var last_di_pos : UNKNOWN_TYPE = null
+- var last_di_pos : Vector2 = null
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### var panel_radius
-- var panel_radius : UNKNOWN_TYPE = plot_panel_size.x
+- var panel_radius : float = plot_panel_size.x
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -232,27 +232,6 @@
 
 ---
 ## Method Descriptions
-
-### func _get_property_list
-- func _get_property_list() -> UNKNOWN_TYPE
-
-[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
-
-
-
-### func property_can_revert
-- func property_can_revert(property:String) -> bool
-
-[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
-
-
-
-### func property_get_revert
-- func property_get_revert(property:String) -> UNKNOWN_TYPE
-
-[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
-
-
 
 ### func set_panel_type
 - func set_panel_type(val)
@@ -416,7 +395,7 @@
 
 
 ### func get_update_speed
-- func get_update_speed() -> UNKNOWN_TYPE
+- func get_update_speed() -> float
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -444,14 +423,14 @@
 
 
 ### func get_panel_size
-- func get_panel_size() -> UNKNOWN_TYPE
+- func get_panel_size() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_panel_padding
-- func get_panel_padding() -> UNKNOWN_TYPE
+- func get_panel_padding() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -486,35 +465,35 @@
 
 
 ### func get_limit_vec
-- func get_limit_vec() -> UNKNOWN_TYPE
+- func get_limit_vec() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_limit_center
-- func get_limit_center() -> get_limit_vec
+- func get_limit_center() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_limit_range
-- func get_limit_range() -> deg2rad
+- func get_limit_range() -> float
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_default_value
-- func get_default_value() -> UNKNOWN_TYPE
+- func get_default_value() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
 
 
 ### func get_data
-- func get_data() -> as_percentage_int_vec
+- func get_data() -> Dictionary
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 
@@ -535,7 +514,7 @@
 
 
 ### func get_value_float
-- func get_value_float() -> UNKNOWN_TYPE
+- func get_value_float() -> Vector2
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 

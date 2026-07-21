@@ -3,6 +3,7 @@
 - extends Control
 - script "res://ui/ActionSelector/ActionUIData/ActionUIData.gd"
 - scene "res://ui/ActionSelector/ActionUIData/ActionUIData.tscn"
+- version 1.10.0
 
 
 

@@ -26,22 +26,8 @@
 
 
 
-### var _c_EnableThisToUseMinAndMaxValue
-- var _c_EnableThisToUseMinAndMaxValue : int = 0
-
-[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
-
-
-
 ### var apply_top_node_range
 - var apply_top_node_range : bool = false
-
-[](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
-
-
-
-### var _c_DisabledByDefaultForBackwardCompatibility
-- var _c_DisabledByDefaultForBackwardCompatibility : int = 0
 
 [](https://hustledocs.trimaydev.com/docs/missing-description.md ':include')
 

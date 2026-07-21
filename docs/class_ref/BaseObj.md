@@ -1,690 +1,1786 @@
-<div id="page_main"></div>
+# BaseObj
+- class_name BaseObj
+- extends Node2D
+- script "res://obj/BaseObj.gd"
+- scene "res://obj/BaseObj.tscn"
+- version 1.10.0
+
+Class containing functionality that both [``Fighter``](class_ref/Fighter) and [``BaseProjectile``](class_ref/BaseProjectile) use.\n\n_**Note:** This class is missing functionality that is added by [``Fighter``](class_ref/Fighter) and [``BaseProjectile``](class_ref/BaseProjectile).  Despite its name, all game objects that are not Fighters should extend [``BaseProjectile``](class_ref/BaseProjectile), not BaseObj directly._
 
 
-<script>
-let data = {
-    version: "1.9.0",
-    updated: "2024-04-04",
-    name: "BaseObj",
-    inherits: "Node2D",
-    script_path: "res://obj/BaseObj.gd",
-    scene_path: "res://obj/BaseObj.tscn",
-    desc: "Class containing functionality that both [``Fighter``](class_ref/Fighter) and [``BaseProjectile``](class_ref/BaseProjectile) use.\n\n_**Note:** This class is missing functionality that is added by [``Fighter``](class_ref/Fighter) and [``BaseProjectile``](class_ref/BaseProjectile).  Despite its name, all game objects that are not Fighters should extend [``BaseProjectile``](class_ref/BaseProjectile), not BaseObj directly._",
-    signals: [
-        { name:'object_spawned',
-          params:['object'],
-                desc:"" },
-        { name:'particle_effect_spawned',
-          params:['particle'],
-                desc:"" },
-        { name:'initialized',
-          params:[],
-                desc:"" },
-        { name:'got_hit',
-          params:[],
-                desc:"" },
-        { name:'got_hit_by_fighter',
-          params:[],
-                desc:"" },
-        { name:'got_hit_by_projectile',
-          params:[],
-                desc:"" },
-        { name:'hitbox_refreshed',
-          params:['hitbox'],
-                desc:"" },
-        { name:'global_hitlag',
-          params:['amount'],
-                desc:"" },
-    ],
-    constants: [
-        { name:'RUMBLE_MODIFIER',
-          type:'float', value:'4.0',
-                desc:"" },
-        { name:'MAX_RUMBLE',
-          type:'int', value:'10',
-                desc:"" },
-        { name:'MIN_VELOCITY',
-          type:'fixed', value:'"0.0001"',
-                desc:"" },
-    ],
-    properties: [
-        { export:true, name:'id',
-          type:'int', value:'1',
-                desc:"" },
-        { export:true, name:'dummy',
-          type:'bool', value:'false',
-                desc:"" },
-        { export:true, name:'_c_MovementAttributes',
-          type:'int', value:'0',
-                desc:"" },
-        { export:true, name:'gravity',
-          type:'String', value:'"0.8"',
-                desc:"" },
-        { export:true, name:'ground_friction',
-          type:'String', value:'"2.5"',
-                desc:"" },
-        { export:true, name:'air_friction',
-          type:'String', value:'"0.2"',
-                desc:"" },
-        { export:true, name:'max_ground_speed',
-          type:'String', value:'"15"',
-                desc:"" },
-        { export:true, name:'max_air_speed',
-          type:'String', value:'"10"',
-                desc:"" },
-        { export:true, name:'max_fall_speed',
-          type:'String', value:'"15"',
-                desc:"" },
-        { export:true, name:'extra_state_variables',
-          type:'String',
-                desc:"" },
-        { export:true, name:'damages_own_team',
-          type:'bool', value:'false',
-                desc:"" },
-        { export:true, name:'has_projectile_parry_window',
-          type:'bool', value:'true',
-                desc:"" },
-        { export:true, name:'always_parriable',
-          type:'bool', value:'false',
-                desc:"" },
-        { export:true, name:'throw_positions',
-          type:'Dictionary', value:'{}',
-                desc:"" },
-        { onready:true, name:'collision_box',
-          type:'Node', value:'$CollisionBox',
-                desc:"" },
-        { onready:true, name:'hurtbox',
-          type:'Node', value:'$Hurtbox',
-                desc:"" },
-        { onready:true, name:'particles',
-          type:'Node', value:'$"%Particles"',
-                desc:"" },
-        { onready:true, name:'state_machine',
-          type:'Node', value:'$StateMachine',
-                desc:"" },
-        { onready:true, name:'sprite',
-          type:'Node', value:'$"%Sprite"',
-                desc:"" },
-        { onready:true, name:'flip',
-          type:'Node', value:'$Flip',
-                desc:"" },
-        { name:'debug_label',
-          type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'chara',
-          type:'FGObject', value:'FGObject.new()',
-                desc:"" },
-        { name:'stage_width',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'ceiling_height',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'has_ceiling',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'obj_name',
-          type:'String',
-                desc:"" },
-        { name:'custom_hitspark',
-          type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'data',
-          type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'obj_data',
-          type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'current_tick',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'game_tick',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'hitlag_ticks',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'combo_count',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'gravity_enabled',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'last_hit_frame',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'is_ghost',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'spawn_data',
-          type:'UNKNOWN_TYPE', value:'null',
-                desc:"" },
-        { name:'disabled',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'creator_name',
-          type:'UNKNOWN_TYPE', value:'null',
-                desc:"" },
-        { name:'creator',
-          type:'UNKNOWN_TYPE', value:'null',
-                desc:"" },
-        { name:'can_update_sprite',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'fixed',
-          type:'FixedMath', value:'FixedMath.new()',
-                desc:"" },
-        { name:'native',
-          type:'NativeMethods', value:'NativeMethods.new()',
-                desc:"" },
-        { name:'state_interruptable',
-          type:'bool', value:'true',
-                desc:"" },
-        { name:'state_hit_cancellable',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'invulnerable',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'grounded_attack_immune',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'aerial_attack_immune',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'use_platforms',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'last_object_hit',
-          type:'String', value:'""',
-                desc:"" },
-        { name:'default_hurtbox',
-          type:'Dictionary', value:'{ "x":0, "y":0, "width":0, "height":0 }',
-                desc:"" },
-        { name:'projectile_invulnerable',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'throw_invulnerable',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'state_variables',
-          type:'Array', value:'["id", "grounded_attack_immune", "game_tick", "match_seed", "aerial_attack_immune", "last_object_hit", "can_update_sprite", "last_hit_frame", "damages_own_team", "ceiling_height", "has_ceiling", "has_projectile_parry_window", "always_parriable", "use_platforms", "gravity", "ground_friction", "air_friction", "max_ground_speed", "max_air_speed", "max_fall_speed", "projectile_invulnerable", "gravity_enabled", "default_hurtbox", "throw_invulnerable", "creator_name", "name", "obj_name", "stage_width", "hitlag_ticks", "combo_count", "invulnerable", "current_tick", "disabled", "state_interruptable", "state_hit_cancellable"]',
-                desc:"" },
-        { name:'hitboxes',
-          type:'Array', value:'[]',
-                desc:"" },
-        { name:'previous_state',
-          type:'String', value:'""',
-                desc:"" },
-        { name:'fighter_owner',
-          type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'initialized',
-          type:'bool', value:'false',
-                desc:"" },
-        { name:'rng',
-          type:'BetterRng', value:'BetterRng.new()',
-                desc:"" },
-        { name:'objs_map',
-          type:'Dictionary', value:'{}',
-                desc:"A list of all objects spawned during a game. Starts off only containing the fighter objects as 'P1' and 'P2', then every other object as '3', '4', etc." },
-        { name:'sounds',
-          type:'Dictionary', value:'{}',
-                desc:"" },
-        { name:'logic_rng',
-          type:'BetterRng',
-                desc:"" },
-        { name:'logic_rng_static',
-          type:'BetterRng',
-                desc:"" },
-        { name:'logic_rng_seed',
-          type:'int', value:'0',
-                desc:"" },
-        { name:'logic_rng_static_seed',
-          type:'int', value:'0',
-                desc:"" },
-    ],
-    methods: [
-        { name:'_enter_tree',
-          params:[],
-                desc:"" },
-        { name:'get_p1',
-          params:[], type:'obj_from_name',
-                desc:"" },
-        { name:'get_p2',
-          params:[], type:'obj_from_name',
-                desc:"" },
-        { name:'_ready',
-          params:[],
-                desc:"" },
-        { name:'global_hitlag',
-          params:['amount'],
-                desc:"" },
-        { name:'play_sound',
-          params:['sound_name'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'stop_sound',
-          params:['sound_name'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'refresh_hitboxes',
-          params:[],
-                desc:"" },
-        { name:'setup_hitbox_names',
-          params:[],
-                desc:"" },
-        { name:'_on_state_exited',
-          params:['state'],
-                desc:"" },
-        { name:'on_got_push_blocked',
-          params:[],
-                desc:"" },
-        { name:'get_owner',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'current_state',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'is_otg',
-          params:[], type:'bool',
-                desc:"" },
-        { name:'init',
-          params:['pos=null'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'reset_hurtbox',
-          params:[],
-                desc:"" },
-        { name:'rumble',
-          params:['amount:float', 'ticks:int'],
-                desc:"" },
-        { name:'set_rumble',
-          params:['amount'],
-                desc:"" },
-        { name:'change_state',
-          params:['state_name', 'state_data=null', 'enter:bool=true', 'exit:bool=true'],
-                desc:"" },
-        { name:'obj_from_name',
-          params:['name'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'_on_hit_something',
-          params:['obj', 'hitbox'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'hit_fighter_last',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'can_be_thrown',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'copy_to',
-          params:['o:BaseObj'],
-                desc:"Used for copying property values from an object to its prediction ghost" },
-        { name:'get_frames',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'stop_particles',
-          params:[],
-                desc:"" },
-        { name:'get_hitbox_x_dir',
-          params:['hitbox'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_current_sprite_frame',
-          params:[], type:'Texture',
-                desc:"" },
-        { name:'get_current_sprite_frame_path',
-          params:[], type:'String',
-                desc:"" },
-        { name:'get_current_sprite_frame_number',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'turn_around',
-          params:[],
-                desc:"" },
-        { name:'update_data',
-          params:[],
-                desc:"" },
-        { name:'obj_local_pos',
-          params:['obj:BaseObj'], type:'Dictionary',
-                desc:"" },
-        { name:'obj_local_center',
-          params:['obj:BaseObj'], type:'Dictionary',
-                desc:"" },
-        { name:'get_global_center',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_facing',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_opponent',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_fighter',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'hash_static_rng',
-          params:[],
-                desc:"" },
-        { name:'hash_rng',
-          params:[],
-                desc:"" },
-        { name:'obj_distance',
-          params:['obj'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'spawn_object',
-          params:['projectile:PackedScene', 'pos_x:int', 'pos_y:int', 'relative:bool=true', 'data=null', 'local:bool=true'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_hurtbox_center',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_hurtbox_center_float',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'hurtbox_pos_relative',
-          params:[], type:'Dictionary',
-                desc:"" },
-        { name:'hurtbox_pos_float',
-          params:[], type:'Vector2',
-                desc:"" },
-        { name:'hurtbox_pos_relative_float',
-          params:[], type:'Vector2',
-                desc:"" },
-        { name:'start_throw_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'end_throw_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'start_projectile_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'end_projectile_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'start_aerial_attack_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'end_aerial_attack_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'start_grounded_attack_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'end_grounded_attack_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'start_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'end_invulnerability',
-          params:[],
-                desc:"" },
-        { name:'spawn_particle_effect',
-          params:['particle_effect:PackedScene', 'pos:Vector2', 'dir:Vector2=Vector2.RIGHT'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'spawn_particle_effect_relative',
-          params:['particle_effect:PackedScene', 'pos:Vector2=Vector2()', 'dir:Vector2=Vector2.RIGHT'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'_spawn_particle_effect',
-          params:['particle_effect:PackedScene', 'pos:Vector2', 'dir:Vector2=Vector2.RIGHT'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_camera',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'grab_camera_focus',
-          params:[],
-                desc:"" },
-        { name:'release_camera_focus',
-          params:[],
-                desc:"" },
-        { name:'screen_bump',
-          params:['dir:Vector2=Vector2()', 'screenshake_amount:float=2.0', 'screenshake_time:float=0.1'],
-                desc:"" },
-        { name:'update_collision_boxes',
-          params:[],
-                desc:"" },
-        { name:'set_facing',
-          params:['facing:int'],
-                desc:"" },
-        { name:'fixed_dot',
-          params:['x1:String', 'y1:String', 'x2:String', 'y2:String'], type:'String',
-                desc:"" },
-        { name:'fixed_inverse_lerp',
-          params:['a:String', 'b:String', 'v:String'], type:'String',
-                desc:"" },
-        { name:'fixed_map',
-          params:['i_min:String', 'i_max:String', 'o_min:String', 'o_max:String', 'v:String'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'set_vel',
-          params:['x', 'y'],
-                desc:"" },
-        { name:'get_vel',
-          params:[], type:'Dictionary',
-                desc:"" },
-        { name:'get_facing_int',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'detect',
-          params:['obj'],
-                desc:"" },
-        { name:'check_params',
-          params:['x', 'y'],
-                desc:"" },
-        { name:'set_x',
-          params:['x:int'],
-                desc:"" },
-        { name:'set_y',
-          params:['y:int'],
-                desc:"" },
-        { name:'get_center_position_float',
-          params:[], type:'Vector2',
-                desc:"" },
-        { name:'set_pos',
-          params:['x', 'y'], type:'UNKNOWN_TYPE',
-                desc:"Sets an object's position relative to the stage. For setting position relative to the object, see move_directly" },
-        { name:'set_snap_to_ground',
-          params:['snap:bool'],
-                desc:"" },
-        { name:'get_snap_to_ground',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_data',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'get_active_hitboxes',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'sort_hitboxes',
-          params:['a', 'b'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'apply_force',
-          params:['x', 'y'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'apply_force_relative',
-          params:['x', 'y'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'apply_forces',
-          params:[],
-                desc:"" },
-        { name:'apply_forces_no_limit',
-          params:[],
-                desc:"" },
-        { name:'set_gravity_modifier',
-          params:['modifier:String'],
-                desc:"" },
-        { name:'apply_grav_custom',
-          params:['grav:String', 'fall_speed:String'],
-                desc:"" },
-        { name:'apply_grav',
-          params:[],
-                desc:"" },
-        { name:'apply_fric',
-          params:[],
-                desc:"" },
-        { name:'apply_x_fric',
-          params:['fric'],
-                desc:"" },
-        { name:'apply_y_fric',
-          params:['fric'],
-                desc:"" },
-        { name:'limit_speed',
-          params:['limit'],
-                desc:"" },
-        { name:'limit_x_speed',
-          params:['limit'],
-                desc:"" },
-        { name:'limit_y_speed',
-          params:['limit'],
-                desc:"" },
-        { name:'get_object_dir',
-          params:['obj'], type:'get_facing_int',
-                desc:"" },
-        { name:'get_object_dir_vec',
-          params:['obj'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'move_directly',
-          params:['x', 'y'], type:'UNKNOWN_TYPE',
-                desc:"Sets an object's position relative to itself. For setting position relative to the stage, see set_pos" },
-        { name:'move_directly_relative',
-          params:['x', 'y'], type:'UNKNOWN_TYPE',
-                desc:"Same as move_directly, except relative to the object's facing, positive will always be forward, negative will always be backward" },
-        { name:'_process',
-          params:['delta'],
-                desc:"" },
-        { name:'debug_text',
-          params:[],
-                desc:"" },
-        { name:'debug_info',
-          params:['data'],
-                desc:"" },
-        { name:'debug_dict',
-          params:['text', 'dict'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'reset_momentum',
-          params:[],
-                desc:"" },
-        { name:'is_grounded',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'set_grounded',
-          params:['on'],
-                desc:"" },
-        { name:'add_pushback',
-          params:['pushback'],
-                desc:"" },
-        { name:'reset_pushback',
-          params:[],
-                desc:"" },
-        { name:'update_grounded',
-          params:[],
-                desc:"" },
-        { name:'on_got_parried',
-          params:[],
-                desc:"" },
-        { name:'on_got_blocked',
-          params:[],
-                desc:"" },
-        { name:'on_got_parried_by',
-          params:['who'],
-                desc:"" },
-        { name:'on_got_blocked_by',
-          params:['who'],
-                desc:"" },
-        { name:'deactivate_current_hitbox',
-          params:[],
-                desc:"" },
-        { name:'deactivate_hitboxes',
-          params:[],
-                desc:"" },
-        { name:'hit_by',
-          params:['hitbox:Hitbox'],
-                desc:"" },
-        { name:'get_pos',
-          params:[], type:'Dictionary',
-                desc:"" },
-        { name:'xy_to_dir',
-          params:['x', 'y', 'mul:fixed="1.0"', 'div:fixed="100.0"'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'on_state_started',
-          params:['state'],
-                desc:"" },
-        { name:'on_state_ended',
-          params:['state'],
-                desc:"" },
-        { name:'get_collision_box',
-          params:[], type:'Dictionary',
-                desc:"" },
-        { name:'get_pos_visual',
-          params:[], type:'Vector2',
-                desc:"" },
-        { name:'distance_to',
-          params:['object:BaseObj'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'tick',
-          params:[],
-                desc:"" },
-        { name:'on_hit_ceiling',
-          params:[],
-                desc:"" },
-        { name:'state_tick',
-          params:[],
-                desc:"" },
-        { name:'fixed_deg_to_rad',
-          params:['n'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_range',
-          params:['a:int', 'b:int'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_percent',
-          params:['n:int'], type:'bool',
-                desc:"" },
-        { name:'randi_choice',
-          params:['choices:Array'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_weighted_choice',
-          params:['choices:Array', 'weights:Array'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_static',
-          params:[], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_range_static',
-          params:['a:int', 'b:int'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_percent_static',
-          params:['n:int'], type:'bool',
-                desc:"" },
-        { name:'randi_choice_static',
-          params:['choices:Array'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'randi_weighted_choice_static',
-          params:['choices:Array', 'weights:Array'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'should_hide_rng',
-          params:[], type:'bool',
-                desc:"" },
-        { name:'tick_after',
-          params:[],
-                desc:"" },
-        { name:'previous_state',
-          params:[], type:'current_state',
-                desc:"" },
-        { name:'normal_tick',
-          params:[],
-                desc:"" },
-        { name:'get_knockback_force',
-          params:['hitbox'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'compare',
-          params:['obj'], type:'UNKNOWN_TYPE',
-                desc:"" },
-        { name:'_draw',
-          params:[],
-                desc:"" },
-    ],
-};
 
-    Vue.createApp(ClassDocsComponent, data).mount("#page_main");
+---
+## Property Descriptions
 
-</script>
+### var id
+- var id : int = 1
+
+{{ Missing Description }}
+
+
+
+### var dummy
+- var dummy : bool = false
+
+{{ Missing Description }}
+
+
+
+### var _c_MovementAttributes
+- var _c_MovementAttributes : int = 0
+
+{{ Missing Description }}
+
+
+
+### var gravity
+- var gravity : String = "0.8"
+
+{{ Missing Description }}
+
+
+
+### var ground_friction
+- var ground_friction : String = "2.5"
+
+The amount of speed this object lose per tick while grounded, scaled by how close it is to max speed. (e.g. while at half of max speed, half of this variables value takes effect)
+
+Only takes effect while in a state with [`apply_fric`](class_ref/ObjectState.md?id=var-apply_fric) on.
+
+
+
+### var air_friction
+- var air_friction : String = "0.2"
+
+The amount of speed this object lose per tick while aerial, scaled by how close it is to max speed. (e.g. while at half of max speed, half of this variables value takes effect)
+
+Only takes effect while in a state with [`apply_fric`](class_ref/ObjectState.md?id=var-apply_fric) on.
+
+
+
+### var max_ground_speed
+- var max_ground_speed : String = "15"
+
+{{ Missing Description }}
+
+
+
+### var max_air_speed
+- var max_air_speed : String = "10"
+
+{{ Missing Description }}
+
+
+
+### var max_fall_speed
+- var max_fall_speed : String = "15"
+
+{{ Missing Description }}
+
+
+
+### var damages_own_team
+- var damages_own_team : bool = false
+
+{{ Missing Description }}
+
+
+
+### var has_projectile_parry_window
+- var has_projectile_parry_window : bool = true
+
+{{ Missing Description }}
+
+
+
+### var always_parriable
+- var always_parriable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var throw_positions
+- var throw_positions : Dictionary = {}
+
+{{ Missing Description }}
+
+
+
+### var collision_box
+- var collision_box : Node = $CollisionBox
+
+{{ Missing Description }}
+
+
+
+### var hurtbox
+- var hurtbox : Node = $Hurtbox
+
+{{ Missing Description }}
+
+
+
+### var particles
+- var particles : Node = $"%Particles"
+
+{{ Missing Description }}
+
+
+
+### var state_machine
+- var state_machine : Node = $StateMachine
+
+{{ Missing Description }}
+
+
+
+### var sprite
+- var sprite : Node = $"%Sprite"
+
+{{ Missing Description }}
+
+
+
+### var flip
+- var flip : Node = $Flip
+
+{{ Missing Description }}
+
+
+
+### var debug_label
+- var debug_label : Node
+
+{{ Missing Description }}
+
+
+
+### var chara
+- var chara : FGObject = FGObject.new()
+
+{{ Missing Description }}
+
+
+
+### var stage_width
+- var stage_width : int = 0
+
+Accounts for the current width of the stage. `stage_width` accounts for the width of the stage to the right. `-stage_width` accounts for the width of the stage to the left.
+
+
+
+### var ceiling_height
+- var ceiling_height : int = 0
+
+{{ Missing Description }}
+
+
+
+### var has_ceiling
+- var has_ceiling : bool = false
+
+{{ Missing Description }}
+
+
+
+### var obj_name
+- var obj_name : String
+
+{{ Missing Description }}
+
+
+
+### var custom_hitspark
+- var custom_hitspark : Node
+
+{{ Missing Description }}
+
+
+
+### var custom_hitspark_config
+- var custom_hitspark_config : Node = null
+
+{{ Missing Description }}
+
+
+
+### var data
+- var data : Dictionary
+
+{{ Missing Description }}
+
+
+
+### var obj_data
+- var obj_data : Dictionary
+
+{{ Missing Description }}
+
+
+
+### var current_tick
+- var current_tick : int = 0
+
+{{ Missing Description }}
+
+
+
+### var game_tick
+- var game_tick : int = 0
+
+{{ Missing Description }}
+
+
+
+### var hitlag_ticks
+- var hitlag_ticks : int = 0
+
+{{ Missing Description }}
+
+
+
+### var combo_count
+- var combo_count : int = 0
+
+{{ Missing Description }}
+
+
+
+### var gravity_enabled
+- var gravity_enabled : bool = true
+
+{{ Missing Description }}
+
+
+
+### var last_hit_frame
+- var last_hit_frame : int = 0
+
+{{ Missing Description }}
+
+
+
+### var is_ghost
+- var is_ghost : bool = false
+
+{{ Missing Description }}
+
+
+
+### var spawn_data
+- var spawn_data : Dictionary = null
+
+{{ Missing Description }}
+
+
+
+### var disabled
+- var disabled : bool = false
+
+{{ Missing Description }}
+
+
+
+### var creator_name
+- var creator_name : String = null
+
+{{ Missing Description }}
+
+
+
+### var creator
+- var creator : BaseObj = null
+
+{{ Missing Description }}
+
+
+
+### var can_update_sprite
+- var can_update_sprite : bool = true
+
+{{ Missing Description }}
+
+
+
+### var fixed
+- var fixed : FixedMath = FixedMath.new()
+
+{{ Missing Description }}
+
+
+
+### var native
+- var native : NativeMethods = NativeMethods.new()
+
+{{ Missing Description }}
+
+
+
+### var state_interruptable
+- var state_interruptable : bool = true
+
+{{ Missing Description }}
+
+
+
+### var state_hit_cancellable
+- var state_hit_cancellable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var invulnerable
+- var invulnerable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var grounded_attack_immune
+- var grounded_attack_immune : bool = false
+
+{{ Missing Description }}
+
+
+
+### var aerial_attack_immune
+- var aerial_attack_immune : bool = false
+
+{{ Missing Description }}
+
+
+
+### var use_platforms
+- var use_platforms : bool = false
+
+{{ Missing Description }}
+
+
+
+### var last_object_hit
+- var last_object_hit : String = ""
+
+{{ Missing Description }}
+
+
+
+### var default_hurtbox
+- var default_hurtbox : Dictionary = {
+
+{{ Missing Description }}
+
+
+
+### var projectile_invulnerable
+- var projectile_invulnerable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var throw_invulnerable
+- var throw_invulnerable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var roll_projectile_invulnerable
+- var roll_projectile_invulnerable : bool = false
+
+{{ Missing Description }}
+
+
+
+### var state_variables
+- var state_variables : Array = ["id", "roll_projectile_invulnerable", "grounded_attack_immune", "game_tick", "match_seed", "aerial_attack_immune", "last_object_hit", "can_update_sprite", "last_hit_frame", "damages_own_team", "ceiling_height", "has_ceiling", "has_projectile_parry_window", "always_parriable", "use_platforms", "gravity", "ground_friction", "air_friction", "max_ground_speed", "max_air_speed", "max_fall_speed", "projectile_invulnerable", "gravity_enabled", "default_hurtbox", "throw_invulnerable", "creator_name", "name", "obj_name", "stage_width", "hitlag_ticks", "combo_count", "invulnerable", "current_tick", "disabled", "state_interruptable", "state_hit_cancellable"]
+
+{{ Missing Description }}
+
+
+
+### var hitboxes
+- var hitboxes : Array = []
+
+{{ Missing Description }}
+
+
+
+### var previous_state
+- var previous_state : String = ""
+
+{{ Missing Description }}
+
+
+
+### var fighter_owner
+- var fighter_owner : Fighter
+
+{{ Missing Description }}
+
+
+
+### var initialized
+- var initialized : bool = false
+
+{{ Missing Description }}
+
+
+
+### var rng
+- var rng : BetterRng = BetterRng.new()
+
+{{ Missing Description }}
+
+
+
+### var objs_map
+- var objs_map : Dictionary = {
+
+A list of all objects spawned during a game. Starts off only containing the fighter objects as 'P1' and 'P2', then every other object as '3', '4', etc.
+
+
+
+### var sounds
+- var sounds : Dictionary = {
+
+{{ Missing Description }}
+
+
+
+### var logic_rng
+- var logic_rng : BetterRng
+
+{{ Missing Description }}
+
+
+
+### var logic_rng_static
+- var logic_rng_static : BetterRng
+
+{{ Missing Description }}
+
+
+
+### var logic_rng_seed
+- var logic_rng_seed : int = 0
+
+{{ Missing Description }}
+
+
+
+### var logic_rng_static_seed
+- var logic_rng_static_seed : int = 0
+
+{{ Missing Description }}
+
+
+
+### var hooks
+- var hooks : ObjHooks.gd = null
+
+{{ Missing Description }}
+
+
+
+### var _init_hook_fired
+- var _init_hook_fired : bool = false
+
+{{ Missing Description }}
+
+
+
+
+---
+## Method Descriptions
+
+### func _enter_tree
+- func _enter_tree()
+
+{{ Missing Description }}
+
+
+
+### func get_p1
+- func get_p1() -> CALLS:obj_from_name
+
+{{ Missing Description }}
+
+
+
+### func get_p2
+- func get_p2() -> CALLS:obj_from_name
+
+{{ Missing Description }}
+
+
+
+### func _ready
+- func _ready()
+
+{{ Missing Description }}
+
+
+
+### func global_hitlag
+- func global_hitlag(amount, force:bool=false)
+
+{{ Missing Description }}
+
+
+
+### func play_sound
+- func play_sound(sound_name)
+
+{{ Missing Description }}
+
+
+
+### func stop_sound
+- func stop_sound(sound_name)
+
+{{ Missing Description }}
+
+
+
+### func refresh_hitboxes
+- func refresh_hitboxes()
+
+{{ Missing Description }}
+
+
+
+### func setup_hitbox_names
+- func setup_hitbox_names()
+
+{{ Missing Description }}
+
+
+
+### func _on_state_exited
+- func _on_state_exited(state)
+
+{{ Missing Description }}
+
+
+
+### func on_got_push_blocked
+- func on_got_push_blocked()
+
+{{ Missing Description }}
+
+
+
+### func get_owner
+- func get_owner() -> Fighter
+
+{{ Missing Description }}
+
+
+
+### func current_state
+- func current_state() -> ObjectState
+
+{{ Missing Description }}
+
+
+
+### func is_otg
+- func is_otg() -> bool
+
+{{ Missing Description }}
+
+
+
+### func init
+- func init(pos=null)
+
+{{ Missing Description }}
+
+
+
+### func _fire_init_hook
+- func _fire_init_hook()
+
+{{ Missing Description }}
+
+
+
+### func reset_hurtbox
+- func reset_hurtbox()
+
+{{ Missing Description }}
+
+
+
+### func rumble
+- func rumble(amount:float, ticks:int)
+
+{{ Missing Description }}
+
+
+
+### func set_rumble
+- func set_rumble(amount)
+
+{{ Missing Description }}
+
+
+
+### func change_state
+- func change_state(state_name, state_data=null, enter:bool=true, exit:bool=true)
+
+{{ Missing Description }}
+
+
+
+### func obj_from_name
+- func obj_from_name(name) -> BaseObj
+
+{{ Missing Description }}
+
+
+
+### func _on_hit_something
+- func _on_hit_something(obj, hitbox)
+
+{{ Missing Description }}
+
+
+
+### func hit_fighter_last
+- func hit_fighter_last() -> bool
+
+{{ Missing Description }}
+
+
+
+### func can_be_thrown
+- func can_be_thrown() -> bool
+
+{{ Missing Description }}
+
+
+
+### func _copy_state_variables_to
+- func _copy_state_variables_to(o:BaseObj)
+
+{{ Missing Description }}
+
+
+
+### func copy_to
+- func copy_to(o:BaseObj)
+
+{{ Missing Description }}
+
+
+
+### func get_frames
+- func get_frames() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func stop_particles
+- func stop_particles()
+
+{{ Missing Description }}
+
+
+
+### func get_hitbox_x_dir
+- func get_hitbox_x_dir(hitbox) -> fixed
+
+{{ Missing Description }}
+
+
+
+### func get_current_sprite_frame
+- func get_current_sprite_frame() -> Texture
+
+{{ Missing Description }}
+
+
+
+### func get_current_sprite_frame_path
+- func get_current_sprite_frame_path() -> String
+
+{{ Missing Description }}
+
+
+
+### func get_current_sprite_frame_number
+- func get_current_sprite_frame_number() -> int
+
+{{ Missing Description }}
+
+
+
+### func turn_around
+- func turn_around()
+
+{{ Missing Description }}
+
+
+
+### func update_data
+- func update_data()
+
+{{ Missing Description }}
+
+
+
+### func obj_local_pos
+- func obj_local_pos(obj:BaseObj) -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func obj_local_center
+- func obj_local_center(obj:BaseObj) -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func get_global_center
+- func get_global_center()
+
+*Unused. Doesn't do anything.*
+
+
+
+### func get_facing
+- func get_facing() -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func get_opponent
+- func get_opponent() -> Fighter
+
+{{ Missing Description }}
+
+
+
+### func get_fighter
+- func get_fighter() -> Fighter
+
+{{ Missing Description }}
+
+
+
+### func hash_static_rng
+- func hash_static_rng()
+
+{{ Missing Description }}
+
+
+
+### func hash_rng
+- func hash_rng()
+
+{{ Missing Description }}
+
+
+
+### func obj_distance
+- func obj_distance(obj) -> fixed
+
+{{ Missing Description }}
+
+
+
+### func spawn_object
+- func spawn_object(projectile:PackedScene, pos_x:int, pos_y:int, relative:bool=true, data=null, local:bool=true) -> BaseObj
+
+Spawns an object
+
+- `projectile`: What you're spawning
+- `pos_x`: `y` position you wish to spawn it
+- `pos_y`: `x` position you wish to spawn it
+  - **NOTE**: This is affected by `relative` and `local`
+- `relative`: If the positions you inputted are affected by the direction the player is currently facing.
+  - **NOTE**: Multiplies the value by `get_facing_int()`
+- `data`: Data you wish to pass to the projectile.
+  - **NOTE**: This needs to be coded in if you wish to use this, but it is commonly used to pass velocities to the projectile.
+- `local`: Whether or not the position is relative to the fighter or to their global position. While relative to fighter (0,0) is the bottom center of the fighter. While relative to global position (0,0) the bottom center of the stage.
+
+
+
+### func get_hurtbox_center
+- func get_hurtbox_center() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func get_hurtbox_center_float
+- func get_hurtbox_center_float() -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func hurtbox_pos_relative
+- func hurtbox_pos_relative() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func hurtbox_pos_float
+- func hurtbox_pos_float() -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func hurtbox_pos_relative_float
+- func hurtbox_pos_relative_float() -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func start_throw_invulnerability
+- func start_throw_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_throw_invulnerability
+- func end_throw_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func start_projectile_invulnerability
+- func start_projectile_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_projectile_invulnerability
+- func end_projectile_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func start_roll_projectile_invulnerability
+- func start_roll_projectile_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_roll_projectile_invulnerability
+- func end_roll_projectile_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func start_aerial_attack_invulnerability
+- func start_aerial_attack_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_aerial_attack_invulnerability
+- func end_aerial_attack_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func start_grounded_attack_invulnerability
+- func start_grounded_attack_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_grounded_attack_invulnerability
+- func end_grounded_attack_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func start_invulnerability
+- func start_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func end_invulnerability
+- func end_invulnerability()
+
+{{ Missing Description }}
+
+
+
+### func spawn_particle_effect
+- func spawn_particle_effect(particle_effect:PackedScene, pos:Vector2, dir:Vector2=Vector2.RIGHT)
+
+{{ Missing Description }}
+
+
+
+### func spawn_particle_effect_relative
+- func spawn_particle_effect_relative(particle_effect:PackedScene, pos:Vector2=Vector2(), dir:Vector2=Vector2.RIGHT)
+
+{{ Missing Description }}
+
+
+
+### func _spawn_particle_effect
+- func _spawn_particle_effect(particle_effect:PackedScene, pos:Vector2, dir:Vector2=Vector2.RIGHT) -> ParticleEffect
+
+{{ Missing Description }}
+
+
+
+### func get_camera
+- func get_camera() -> GoodCamera
+
+{{ Missing Description }}
+
+
+
+### func grab_camera_focus
+- func grab_camera_focus()
+
+{{ Missing Description }}
+
+
+
+### func release_camera_focus
+- func release_camera_focus()
+
+{{ Missing Description }}
+
+
+
+### func screen_bump
+- func screen_bump(dir:Vector2=Vector2(), screenshake_amount:float=2.0, screenshake_time:float=0.1)
+
+{{ Missing Description }}
+
+
+
+### func update_collision_boxes
+- func update_collision_boxes()
+
+{{ Missing Description }}
+
+
+
+### func set_facing
+- func set_facing(facing:int)
+
+{{ Missing Description }}
+
+
+
+### func fixed_dot
+- func fixed_dot(x1:String, y1:String, x2:String, y2:String) -> String
+
+{{ Missing Description }}
+
+
+
+### func fixed_inverse_lerp
+- func fixed_inverse_lerp(a:String, b:String, v:String) -> String
+
+{{ Missing Description }}
+
+
+
+### func fixed_map
+- func fixed_map(i_min:String, i_max:String, o_min:String, o_max:String, v:String) -> fixed
+
+{{ Missing Description }}
+
+
+
+### func set_vel
+- func set_vel(x, y)
+
+{{ Missing Description }}
+
+
+
+### func get_vel
+- func get_vel() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func get_facing_int
+- func get_facing_int() -> int
+
+{{ Missing Description }}
+
+
+
+### func detect
+- func detect(obj)
+
+{{ Missing Description }}
+
+
+
+### func check_params
+- func check_params(x, y)
+
+{{ Missing Description }}
+
+
+
+### func set_x
+- func set_x(x:int)
+
+{{ Missing Description }}
+
+
+
+### func set_y
+- func set_y(y:int)
+
+{{ Missing Description }}
+
+
+
+### func get_center_position_float
+- func get_center_position_float() -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func set_pos
+- func set_pos(x, y)
+
+Sets an object's position relative to the stage. For setting position relative to the objects current position, see [`move_directly`](#func-move_directly)
+
+
+
+### func set_snap_to_ground
+- func set_snap_to_ground(snap:bool)
+
+{{ Missing Description }}
+
+
+
+### func get_snap_to_ground
+- func get_snap_to_ground() -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func get_data
+- func get_data() -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func get_active_hitboxes
+- func get_active_hitboxes() -> Array
+
+{{ Missing Description }}
+
+
+
+### func sort_hitboxes
+- func sort_hitboxes(a, b) -> bool
+
+{{ Missing Description }}
+
+
+
+### func apply_force
+- func apply_force(x, y)
+
+{{ Missing Description }}
+
+
+
+### func apply_force_relative
+- func apply_force_relative(x, y)
+
+{{ Missing Description }}
+
+
+
+### func apply_forces
+- func apply_forces()
+
+{{ Missing Description }}
+
+
+
+### func apply_forces_no_limit
+- func apply_forces_no_limit()
+
+{{ Missing Description }}
+
+
+
+### func set_gravity_modifier
+- func set_gravity_modifier(modifier:String)
+
+{{ Missing Description }}
+
+
+
+### func apply_grav_custom
+- func apply_grav_custom(grav:String, fall_speed:String)
+
+{{ Missing Description }}
+
+
+
+### func apply_grav
+- func apply_grav()
+
+{{ Missing Description }}
+
+
+
+### func apply_fric
+- func apply_fric()
+
+{{ Missing Description }}
+
+
+
+### func apply_x_fric
+- func apply_x_fric(fric)
+
+{{ Missing Description }}
+
+
+
+### func apply_y_fric
+- func apply_y_fric(fric)
+
+{{ Missing Description }}
+
+
+
+### func limit_speed
+- func limit_speed(limit)
+
+{{ Missing Description }}
+
+
+
+### func limit_x_speed
+- func limit_x_speed(limit)
+
+{{ Missing Description }}
+
+
+
+### func limit_y_speed
+- func limit_y_speed(limit)
+
+{{ Missing Description }}
+
+
+
+### func get_object_dir
+- func get_object_dir(obj) -> CALLS:get_facing_int
+
+{{ Missing Description }}
+
+
+
+### func get_object_dir_vec
+- func get_object_dir_vec(obj) -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func move_directly
+- func move_directly(x, y)
+
+Sets an object's position relative to it's current position. For setting position relative to the stage, see [set_pos](#func-set_pos)
+
+
+
+### func move_directly_relative
+- func move_directly_relative(x, y)
+
+Same as [move_directly](#func-move_directly), except relative to the object's facing, positive will always be forward, negative will always be backward
+
+
+
+### func _process
+- func _process(delta)
+
+{{ Missing Description }}
+
+
+
+### func debug_text
+- func debug_text()
+
+{{ Missing Description }}
+
+
+
+### func debug_info
+- func debug_info(data)
+
+{{ Missing Description }}
+
+
+
+### func debug_dict
+- func debug_dict(text, dict) -> String
+
+{{ Missing Description }}
+
+
+
+### func reset_momentum
+- func reset_momentum()
+
+{{ Missing Description }}
+
+
+
+### func is_grounded
+- func is_grounded() -> bool
+
+{{ Missing Description }}
+
+
+
+### func set_grounded
+- func set_grounded(on)
+
+{{ Missing Description }}
+
+
+
+### func add_pushback
+- func add_pushback(pushback)
+
+{{ Missing Description }}
+
+
+
+### func reset_pushback
+- func reset_pushback()
+
+{{ Missing Description }}
+
+
+
+### func update_grounded
+- func update_grounded()
+
+{{ Missing Description }}
+
+
+
+### func on_got_parried
+- func on_got_parried()
+
+{{ Missing Description }}
+
+
+
+### func get_state
+- func get_state(state_name) -> ObjectState
+
+{{ Missing Description }}
+
+
+
+### func on_got_blocked
+- func on_got_blocked()
+
+{{ Missing Description }}
+
+
+
+### func on_got_parried_by
+- func on_got_parried_by(who)
+
+{{ Missing Description }}
+
+
+
+### func on_got_blocked_by
+- func on_got_blocked_by(who)
+
+{{ Missing Description }}
+
+
+
+### func deactivate_current_hitbox
+- func deactivate_current_hitbox()
+
+{{ Missing Description }}
+
+
+
+### func deactivate_hitboxes
+- func deactivate_hitboxes()
+
+{{ Missing Description }}
+
+
+
+### func hit_by
+- func hit_by(hitbox:Hitbox)
+
+{{ Missing Description }}
+
+
+
+### func get_pos
+- func get_pos() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func xy_to_dir
+- func xy_to_dir(x, y, mul:fixed="1.0", div:fixed="100.0") -> Dictionary
+
+Takes 2 integers `x` and `y` and 2 [`fixed number strings`](class_ref/FixedMath.md?id=FixedMath), returns a Dictionary of each divided by 4th input and multiplied by 3rd input in that order.
+
+This is primarily useful with XYPlot data which give you two integers between -100 and +100, thus the default for `div` is "100" so that you can scale down XYPlot data this function to any max value you want using only the `mul` input.  For example:
+```gdscript
+extends CharacterState
+
+func _frame_5():
+    var force = host.xy_to_dir(data.x, data.y, "7.5")
+    host.apply_force(force.x, force.y)
+```
+
+
+
+### func on_state_started
+- func on_state_started(state)
+
+{{ Missing Description }}
+
+
+
+### func on_state_ended
+- func on_state_ended(state)
+
+{{ Missing Description }}
+
+
+
+### func get_collision_box
+- func get_collision_box() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func get_pos_visual
+- func get_pos_visual() -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func distance_to
+- func distance_to(object:BaseObj) -> fixed
+
+{{ Missing Description }}
+
+
+
+### func tick
+- func tick()
+
+{{ Missing Description }}
+
+
+
+### func on_hit_ceiling
+- func on_hit_ceiling()
+
+{{ Missing Description }}
+
+
+
+### func state_tick
+- func state_tick()
+
+{{ Missing Description }}
+
+
+
+### func get_states
+- func get_states() -> Array
+
+{{ Missing Description }}
+
+
+
+### func get_limb_data
+- func get_limb_data() -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func get_current_limb_sprite_node
+- func get_current_limb_sprite_node() -> Node
+
+{{ Missing Description }}
+
+
+
+### func get_current_limb_sprite_texture
+- func get_current_limb_sprite_texture() -> Texture
+
+{{ Missing Description }}
+
+
+
+### func get_current_limb_sprite_node_for
+- func get_current_limb_sprite_node_for(_limb_name:String) -> CALLS:get_current_limb_sprite_node
+
+{{ Missing Description }}
+
+
+
+### func get_current_limb_sprite_texture_for
+- func get_current_limb_sprite_texture_for(limb_name:String) -> Texture
+
+{{ Missing Description }}
+
+
+
+### func get_limb_entry
+- func get_limb_entry(limb_name:String) -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func is_limb_absent_on_current_sprite
+- func is_limb_absent_on_current_sprite(limb_name:String) -> bool
+
+{{ Missing Description }}
+
+
+
+### func get_limb_pos
+- func get_limb_pos(limb_name:String) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func get_limb_dir
+- func get_limb_dir(limb_name:String) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func get_limb_local_pos
+- func get_limb_local_pos(limb_name:String) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func get_limb_sprite_parent_dir
+- func get_limb_sprite_parent_dir(limb_name:String) -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func get_limb_local_dir
+- func get_limb_local_dir(limb_name:String) -> UNKNOWN_TYPE
+
+{{ Missing Description }}
+
+
+
+### func has_limb_entry_on_current_sprite
+- func has_limb_entry_on_current_sprite(limb_name:String) -> bool
+
+{{ Missing Description }}
+
+
+
+### func get_limb_pixel_pos
+- func get_limb_pixel_pos(limb_name:String) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func get_limb_pixel_dir
+- func get_limb_pixel_dir(limb_name:String) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func is_limb_flipped
+- func is_limb_flipped(limb_name:String) -> bool
+
+{{ Missing Description }}
+
+
+
+### func _limb_pixel_to_world
+- func _limb_pixel_to_world(sprite_node:Node2D, tex:Texture, pixel_pos:Vector2) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func _limb_dir_to_world
+- func _limb_dir_to_world(sprite_node:Node2D, dir:Vector2) -> Vector2
+
+{{ Missing Description }}
+
+
+
+### func fixed_deg_to_rad
+- func fixed_deg_to_rad(n) -> fixed
+
+{{ Missing Description }}
+
+
+
+### func randi_
+- func randi_() -> int
+
+{{ Missing Description }}
+
+
+
+### func randi_range
+- func randi_range(a:int, b:int) -> int
+
+{{ Missing Description }}
+
+
+
+### func randi_percent
+- func randi_percent(n:int) -> bool
+
+{{ Missing Description }}
+
+
+
+### func randi_choice
+- func randi_choice(choices:Array) -> Variant
+
+{{ Missing Description }}
+
+
+
+### func randi_weighted_choice
+- func randi_weighted_choice(choices:Array, weights:Array) -> Variant
+
+{{ Missing Description }}
+
+
+
+### func randi_static
+- func randi_static() -> int
+
+{{ Missing Description }}
+
+
+
+### func randi_range_static
+- func randi_range_static(a:int, b:int) -> int
+
+{{ Missing Description }}
+
+
+
+### func randi_percent_static
+- func randi_percent_static(n:int) -> bool
+
+{{ Missing Description }}
+
+
+
+### func randi_choice_static
+- func randi_choice_static(choices:Array) -> Variant
+
+{{ Missing Description }}
+
+
+
+### func randi_weighted_choice_static
+- func randi_weighted_choice_static(choices:Array, weights:Array) -> Variant
+
+{{ Missing Description }}
+
+
+
+### func should_hide_rng
+- func should_hide_rng() -> bool
+
+{{ Missing Description }}
+
+
+
+### func tick_after
+- func tick_after()
+
+{{ Missing Description }}
+
+
+
+### func previous_state
+- func previous_state() -> ObjectState
+
+{{ Missing Description }}
+
+
+
+### func normal_tick
+- func normal_tick()
+
+{{ Missing Description }}
+
+
+
+### func get_knockback_force
+- func get_knockback_force(hitbox) -> Dictionary
+
+{{ Missing Description }}
+
+
+
+### func compare
+- func compare(obj)
+
+{{ Missing Description }}
+
+
+
+### func _draw
+- func _draw()
+
+{{ Missing Description }}
+
+
+
+
+---
+## Constant Descriptions
+
+### const RUMBLE_MODIFIER
+- const RUMBLE_MODIFIER : float = 4.0
+
+{{ Missing Description }}
+
+
+
+### const MAX_RUMBLE
+- const MAX_RUMBLE : int = 10
+
+{{ Missing Description }}
+
+
+
+### const MIN_VELOCITY
+- const MIN_VELOCITY : fixed = "0.0001"
+
+{{ Missing Description }}
+
+
+
+
+---
+## Signal Descriptions
+
+### signal object_spawned
+- signal object_spawned(object)
+
+{{ Missing Description }}
+
+
+
+### signal particle_effect_spawned
+- signal particle_effect_spawned(particle)
+
+{{ Missing Description }}
+
+
+
+### signal initialized
+- signal initialized()
+
+{{ Missing Description }}
+
+
+
+### signal got_hit
+- signal got_hit()
+
+{{ Missing Description }}
+
+
+
+### signal got_hit_by_fighter
+- signal got_hit_by_fighter()
+
+{{ Missing Description }}
+
+
+
+### signal got_hit_by_projectile
+- signal got_hit_by_projectile()
+
+{{ Missing Description }}
+
+
+
+### signal hitbox_refreshed
+- signal hitbox_refreshed(hitbox)
+
+{{ Missing Description }}
+
+
+
+### signal global_hitlag
+- signal global_hitlag(amount)
+
+{{ Missing Description }}
+
+
 
 
