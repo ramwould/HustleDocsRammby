@@ -15,7 +15,10 @@ Class containing functionality that both [``Fighter``](class_ref/Fighter) and [`
 ### var id
 - var id : int = 1
 
-{{ Missing Description }}
+The id of the object. Decides which player owns what.
+
+id = 1: Player 1
+id = 2: Player 2
 
 
 
@@ -36,7 +39,9 @@ Class containing functionality that both [``Fighter``](class_ref/Fighter) and [`
 ### var gravity
 - var gravity : String = "0.8"
 
-{{ Missing Description }}
+The speed in which this object falls while airborne
+
+Only takes effect while in a state with [`apply_grav`](class_ref/ObjectState.md?id=var-apply_grav) on.
 
 
 
@@ -61,28 +66,28 @@ Only takes effect while in a state with [`apply_fric`](class_ref/ObjectState.md?
 ### var max_ground_speed
 - var max_ground_speed : String = "15"
 
-{{ Missing Description }}
+The maximum speed this object's x velocity will be clamped to while grounded
 
 
 
 ### var max_air_speed
 - var max_air_speed : String = "10"
 
-{{ Missing Description }}
+The maximum speed this object's x velocity will be clamped to while airborne
 
 
 
 ### var max_fall_speed
 - var max_fall_speed : String = "15"
 
-{{ Missing Description }}
+The maximum speed this object's y velocity will be clamped to while falling
 
 
 
 ### var damages_own_team
 - var damages_own_team : bool = false
 
-{{ Missing Description }}
+Allows this object to interract with other objects of the same [id](#var-id)
 
 
 
@@ -110,42 +115,42 @@ Only takes effect while in a state with [`apply_fric`](class_ref/ObjectState.md?
 ### var collision_box
 - var collision_box : Node = $CollisionBox
 
-{{ Missing Description }}
+Direct reference to this object's collisionbox
 
 
 
 ### var hurtbox
 - var hurtbox : Node = $Hurtbox
 
-{{ Missing Description }}
+Direct reference to this object's hurtbox
 
 
 
 ### var particles
 - var particles : Node = $"%Particles"
 
-{{ Missing Description }}
+Direct reference to this object's "Particles" node
 
 
 
 ### var state_machine
 - var state_machine : Node = $StateMachine
 
-{{ Missing Description }}
+Direct reference to this object's "StateMachine" node
 
 
 
 ### var sprite
 - var sprite : Node = $"%Sprite"
 
-{{ Missing Description }}
+Direct reference to this object's sprite node
 
 
 
 ### var flip
 - var flip : Node = $Flip
 
-{{ Missing Description }}
+Direct reference to this object's "Flip" node
 
 
 
@@ -180,14 +185,16 @@ Accounts for the current width of the stage. `stage_width` accounts for the widt
 ### var has_ceiling
 - var has_ceiling : bool = false
 
-{{ Missing Description }}
+Accounts for if the stage currently has a ceiling.
 
 
 
 ### var obj_name
 - var obj_name : String
 
-{{ Missing Description }}
+The name of this object stored in-game when created.
+
+**Note:** Using `name` returns the same thing.
 
 
 
@@ -264,7 +271,7 @@ Accounts for the current width of the stage. `stage_width` accounts for the widt
 ### var is_ghost
 - var is_ghost : bool = false
 
-{{ Missing Description }}
+Is `true` if this object was created in the predictions as an afterimage.
 
 
 
@@ -355,7 +362,7 @@ Accounts for the current width of the stage. `stage_width` accounts for the widt
 ### var use_platforms
 - var use_platforms : bool = false
 
-{{ Missing Description }}
+*Unused.*
 
 
 
@@ -964,14 +971,14 @@ Spawns an object
 ### func grab_camera_focus
 - func grab_camera_focus()
 
-{{ Missing Description }}
+Centers the camera onto the object that called it. Use [release_camera_focus](#func-release_camera_focus) to reset the camera back to normal.
 
 
 
 ### func release_camera_focus
 - func release_camera_focus()
 
-{{ Missing Description }}
+Resets camera focus after [grab_camera_focus](#func-grab_camera_focus) was called.
 
 
 
@@ -992,7 +999,7 @@ Spawns an object
 ### func set_facing
 - func set_facing(facing:int)
 
-{{ Missing Description }}
+Sets the object's facing to `facing`. 
 
 
 
@@ -1034,7 +1041,7 @@ Spawns an object
 ### func get_facing_int
 - func get_facing_int() -> int
 
-{{ Missing Description }}
+Gets the object's current facing as an integer. 1 is facing right, -1 is facing left.
 
 
 
@@ -1055,14 +1062,14 @@ Spawns an object
 ### func set_x
 - func set_x(x:int)
 
-{{ Missing Description }}
+Sets the object's x position relative to the stage. For setting both x and y, see [`set_pos`](#func-set_pos).
 
 
 
 ### func set_y
 - func set_y(y:int)
 
-{{ Missing Description }}
+Sets the object's y position relative to the stage. For setting both x and y, see [`set_pos`](#func-set_pos).
 
 
 
@@ -1272,7 +1279,7 @@ Same as [move_directly](#func-move_directly), except relative to the object's fa
 ### func is_grounded
 - func is_grounded() -> bool
 
-{{ Missing Description }}
+Returns `true` if the object is touching the floor.
 
 
 
@@ -1363,7 +1370,9 @@ Same as [move_directly](#func-move_directly), except relative to the object's fa
 ### func get_pos
 - func get_pos() -> Dictionary
 
-{{ Missing Description }}
+Returns the position of the object as a dictionary of 2 integers `x` and `y`relative to the stage.
+
+It is advised to call [`update_data`](#func-update_data) before `get_pos()` if the object was moved on the same frame before `get_pos()` is called.
 
 
 
