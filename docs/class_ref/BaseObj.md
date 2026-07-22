@@ -87,7 +87,7 @@ The maximum speed this object's y velocity will be clamped to while falling
 ### var damages_own_team
 - var damages_own_team : bool = false
 
-Allows this object to interract with other objects of the same [id](#var-id)
+Allows this object to interact with other objects of the same id
 
 
 
@@ -513,14 +513,14 @@ A list of all objects spawned during a game. Starts off only containing the figh
 ### func get_p1
 - func get_p1() -> CALLS:obj_from_name
 
-{{ Missing Description }}
+Returns the [Fighter](class_ref/Fighter) object with an id of 1
 
 
 
 ### func get_p2
 - func get_p2() -> CALLS:obj_from_name
 
-{{ Missing Description }}
+Returns the [Fighter](class_ref/Fighter) object with an id of 2
 
 
 
@@ -541,14 +541,16 @@ A list of all objects spawned during a game. Starts off only containing the figh
 ### func play_sound
 - func play_sound(sound_name)
 
-{{ Missing Description }}
+Plays the sound from [sounds](#var-sounds) with a matching `sound_name`. Does nothing if that sound does not exist.
+
+**Note:** Add AudioStreamPlayer or AudioStreamPlayer2D child nodes to the object's "Sounds" node to populate the list with each node's name.
 
 
 
 ### func stop_sound
 - func stop_sound(sound_name)
 
-{{ Missing Description }}
+Stops the sound from [sounds](#var-sounds) with a matching `sound_name` from playing. 
 
 
 
@@ -590,14 +592,14 @@ A list of all objects spawned during a game. Starts off only containing the figh
 ### func current_state
 - func current_state() -> ObjectState
 
-{{ Missing Description }}
+Gets the object's current state.
 
 
 
 ### func is_otg
 - func is_otg() -> bool
 
-{{ Missing Description }}
+Checks if the object's current state is "Knockdown" or "HardKnockdown".
 
 
 
@@ -730,7 +732,7 @@ A list of all objects spawned during a game. Starts off only containing the figh
 ### func turn_around
 - func turn_around()
 
-{{ Missing Description }}
+Flips the object's facing. Shorthand for `set_facing(get_facing_int() * -1)`
 
 
 
@@ -763,23 +765,22 @@ A list of all objects spawned during a game. Starts off only containing the figh
 
 
 ### func get_facing
-- func get_facing() -> UNKNOWN_TYPE
+- func get_facing() -> String
 
-{{ Missing Description }}
+Gets the current facing of the object and returns it as a string `"Left"` or `"Right"` respectively.
 
 
 
 ### func get_opponent
 - func get_opponent() -> Fighter
 
-{{ Missing Description }}
-
+Gets the [Fighter](class_ref/Fighter) object with the opposing id of this object.
 
 
 ### func get_fighter
 - func get_fighter() -> Fighter
 
-{{ Missing Description }}
+Gets the [Fighter](class_ref/Fighter) object with the same id as this object.
 
 
 
@@ -999,7 +1000,7 @@ Resets camera focus after [grab_camera_focus](#func-grab_camera_focus) was calle
 ### func set_facing
 - func set_facing(facing:int)
 
-Sets the object's facing to `facing`. 
+Sets the object's facing direction to `facing`. If `facing` is not 1 or -1 then it will by default set the facing to `1`.
 
 
 
@@ -1027,14 +1028,16 @@ Sets the object's facing to `facing`.
 ### func set_vel
 - func set_vel(x, y)
 
-{{ Missing Description }}
+Sets the velocity to `x` and `y`, which both must either be integers or strings.
 
 
 
 ### func get_vel
 - func get_vel() -> Dictionary
 
-{{ Missing Description }}
+Returns the velocity of the object as a dictionary of 2 integers `x` and `y`.
+
+It is advised to call [`update_data`](#func-update_data) before `get_vel()` if the object's velocity was changed on the same frame before `get_vel()` is called.
 
 
 
@@ -1216,7 +1219,7 @@ Sets an object's position relative to the stage. For setting position relative t
 ### func get_object_dir
 - func get_object_dir(obj) -> CALLS:get_facing_int
 
-{{ Missing Description }}
+Returns  1 or -1 if [`obj`](#class_ref/BaseObj.md) is to the right or left of this object respectively.
 
 
 
@@ -1675,7 +1678,7 @@ func _frame_5():
 ### func previous_state
 - func previous_state() -> ObjectState
 
-{{ Missing Description }}
+Returns the object's previous state. Will return `null` if there isn't one.
 
 
 
